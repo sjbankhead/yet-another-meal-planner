@@ -1056,8 +1056,10 @@ describe("differentiators (member-app-differentiators)", () => {
   });
 
   it("GET /cookbook/trending is ETagged, min-signal-guarded, and counts-only", async () => {
+    // Dates relative to "now" so the trailing-window fixture never drifts out of range.
+    const day = (ago: number) => new Date(Date.now() - ago * 86400_000).toISOString().slice(0, 10);
     // The production-shaped sparse log: one cook — the guard yields an EMPTY set.
-    const sparse = memberEnv({ cooking_log: [{ id: 1, tenant: "casey", date: "2026-07-01", type: "recipe", recipe: "tacos" }] });
+    const sparse = memberEnv({ cooking_log: [{ id: 1, tenant: "casey", date: day(2), type: "recipe", recipe: "tacos" }] });
     const cookie = await loggedIn(sparse.env);
     const empty = await get(sparse.env, "/api/cookbook/trending", cookie);
     expect(empty.status).toBe(200);
@@ -1066,8 +1068,8 @@ describe("differentiators (member-app-differentiators)", () => {
     // A threshold-crossing log (2 tenants) trends with counts only + 304 on re-read.
     const crossing = memberEnv({
       cooking_log: [
-        { id: 1, tenant: "casey", date: "2026-07-01", type: "recipe", recipe: "tacos" },
-        { id: 2, tenant: "pat", date: "2026-07-03", type: "recipe", recipe: "tacos" },
+        { id: 1, tenant: "casey", date: day(3), type: "recipe", recipe: "tacos" },
+        { id: 2, tenant: "pat", date: day(1), type: "recipe", recipe: "tacos" },
       ],
     });
     const cookie2 = await loggedIn(crossing.env);
