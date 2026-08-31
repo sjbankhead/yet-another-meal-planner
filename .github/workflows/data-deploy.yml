@@ -75,7 +75,7 @@ jobs:
       # ever committed back to the data repo (except the pinned ids, below).
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
-          repository: caseyWebb/yet-another-meal-planner
+          repository: sjbankhead/yet-another-meal-planner
           ref: ${{ inputs.code_ref }}
           path: _code
 
