@@ -151,9 +151,11 @@
 	// (scripts/merge-wrangler-config.mjs), so a cron added here propagates to every
 	// operator on their next deploy. Operator-owned keys (vars, KV ids) come from the
 	// operator's config; the maintainer's vars/KV-ids in this file are stripped.
+	// The cron cadence is reduced to 30 minutes to ease the free-tier KV daily list-operation
+	// budget (the tenant-registry backfill lists the allowlist on every tick; see src/signup.ts).
 	"triggers": {
 		"crons": [
-			"*/5 * * * *"
+			"*/30 * * * *"
 		]
 	},
 	"observability": {
